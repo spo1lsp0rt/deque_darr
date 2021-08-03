@@ -15,29 +15,36 @@ template <typename T>
 class deque
 {
 private:
-	T *a;
-	unsigned int d_size;
+	T* a{};
+	size_t d_size{};
 
 public:
-	deque(const unsigned int& _size, const T& val) {
+	deque() = default;
+	deque(const deque<T>& _deque) {
+		*this = _deque;
+	}
+	deque(const size_t& _size, const T& val) {
 		a = new T[_size];
-		for (unsigned int i = 0; i < _size; i++) {
+		for (size_t i = 0; i < _size; i++) {
 			a[i] = val;
 		}
 		d_size = _size;
 	}
-	deque(const unsigned int& _size) {
+	deque(const size_t& _size) {
 		a = new T[_size];
-		for (unsigned int i = 0; i < _size; i++) {
-			a[i] = NULL;
+		for (size_t i = 0; i < _size; i++) {
+			a[i] = 0;
 		}
 		d_size = _size;
 	}
+	~deque() {
+		clear();
+	}
 
-	void assign(const unsigned int& _size, const T& val) {
-		if (d_size != 0) delete a;
+	void assign(const size_t& _size, const T& val) {
+		if (d_size) delete[] a;
 		a = new T[_size];
-		for (unsigned int i = 0; i < _size; i++) {
+		for (size_t i = 0; i < _size; i++) {
 			a[i] = val;
 		}
 		d_size = _size;
@@ -51,23 +58,24 @@ public:
 		return a[d_size - 1];
 	}
 
-	unsigned int size() {
+	size_t size() const {
 		return d_size;
 	}
 
-	bool empty() {
+	bool empty() const {
 		return d_size == 0;
 	}
 
-	unsigned int begin() const {
+	size_t begin() const {
 		return 0;
 	}
 
-	unsigned int end() const {
-		return d_size - 1;
+	size_t end() const {
+		if (d_size) return d_size - 1;
+		return 0;
 	}
 
-	void insert(const unsigned int& pos, const T& val) {
+	void insert(const size_t& pos, const T& val) {
 		if (d_size == 0) {
 			d_size++;
 			a = new T[d_size];
@@ -76,16 +84,16 @@ public:
 		else {
 			d_size++;
 			T* temp = new T[d_size];
-			for (unsigned int i = 0; i < pos; i++) {
+			for (size_t i = 0; i < pos; i++) {
 				temp[i] = a[i];
 			}
 			temp[pos] = val;
-			for (unsigned int i = pos; i < d_size - 1; i++) {
+			for (size_t i = pos; i < d_size - 1; i++) {
 				temp[i + 1] = a[i];
 			}
 			delete[] a;
 			a = new T[d_size];
-			for (unsigned int i = 0; i < d_size; i++) {
+			for (size_t i = 0; i < d_size; i++) {
 				a[i] = temp[i];
 			}
 			delete[] temp;
@@ -102,12 +110,12 @@ public:
 			d_size++;
 			T* temp = new T[d_size];
 			temp[0] = val;
-			for (unsigned int i = 0; i < d_size - 1; i++) {
+			for (size_t i = 0; i < d_size - 1; i++) {
 				temp[i + 1] = a[i];
 			}
 			delete[] a;
 			a = new T[d_size];
-			for (unsigned int i = 0; i < d_size; i++) {
+			for (size_t i = 0; i < d_size; i++) {
 				a[i] = temp[i];
 			}
 			delete[] temp;
@@ -123,12 +131,12 @@ public:
 		else {
 			d_size++;
 			T* temp = new T[d_size];
-			for (unsigned int i = 0; i < d_size - 1; i++) {
+			for (size_t i = 0; i < d_size - 1; i++) {
 				temp[i] = a[i];
 			}
 			delete[] a;
 			a = new T[d_size];
-			for (unsigned int i = 0; i < d_size; i++) {
+			for (size_t i = 0; i < d_size; i++) {
 				a[i] = temp[i];
 			}
 			delete[] temp;
@@ -143,12 +151,12 @@ public:
 		else {
 			d_size--;
 			T* temp = new T[d_size];
-			for (unsigned int i = 0; i < d_size; i++) {
+			for (size_t i = 0; i < d_size; i++) {
 				temp[i] = a[i + 1];
 			}
 			delete[] a;
 			a = new T[d_size];
-			for (unsigned int i = 0; i < d_size; i++) {
+			for (size_t i = 0; i < d_size; i++) {
 				a[i] = temp[i];
 			}
 			delete[] temp;
@@ -162,12 +170,12 @@ public:
 		else {
 			d_size--;
 			T* temp = new T[d_size];
-			for (int i = d_size - 1; i >= 0; i--) {
+			for (size_t i = 0; i < d_size; i++) {
 				temp[i] = a[i];
 			}
 			delete[] a;
 			a = new T[d_size];
-			for (unsigned int i = 0; i < d_size; i++) {
+			for (size_t i = 0; i < d_size; i++) {
 				a[i] = temp[i];
 			}
 			delete[] temp;
@@ -175,11 +183,36 @@ public:
 	}
 
 	void clear() {
-		delete a;
-		d_size = 0;
+		if (d_size) {
+			delete[] a;
+			a = nullptr;
+			d_size = 0;
+		}
 	}
 
-	T& operator[](const unsigned int& pos) {
+	bool operator==(const deque<T>& _deque) {
+		if (d_size != _deque.d_size) return false;
+		else {
+			for (size_t i = 0; i < d_size; i++) {
+				if (a[i] != _deque.a[i]) return false;
+			}
+		}
+		return true;
+	}
+
+	deque<T>& operator=(const deque<T>& _deque) {
+		if (!(*this == _deque) && !(_deque.d_size == 0)) {
+			if (d_size != 0) delete[] a;
+			d_size = _deque.d_size;
+			a = new T[d_size];
+			for (size_t i = 0; i < d_size; i++) {
+				a[i] = _deque.a[i];
+			}
+		}
+		return *this;
+	}
+
+	T& operator[](const size_t& pos) {
 		if (pos >= d_size) {
 			throw std::out_of_range("err: out of range");
 		}
@@ -193,6 +226,16 @@ int main()
 {
 	setlocale(LC_ALL, "ru");
 	deque<int> dq(3, 1);
+	for (size_t i = dq.begin(); i <= dq.end(); i++) {
+		cout << dq[i] << " ";
+	}
+	//при присваивании самого себя срабатывает проверка, данные не потеряются
+	dq = dq;
+	cout << endl;
+	for (size_t i = dq.begin(); i <= dq.end(); i++) {
+		cout << dq[i] << " ";
+	}
+	cout << endl;
 	//изменили первое значение дека вызовом front()
 	dq.front() = 777;
 	//изменили промежуточное значение дека вызовом оператора []
