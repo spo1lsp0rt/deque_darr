@@ -83,12 +83,12 @@ public:
 			for (unsigned int i = pos; i < d_size - 1; i++) {
 				temp[i + 1] = a[i];
 			}
-			delete a;
+			delete[] a;
 			a = new T[d_size];
 			for (unsigned int i = 0; i < d_size; i++) {
 				a[i] = temp[i];
 			}
-			delete temp;
+			delete[] temp;
 		}
 	}
 
@@ -105,12 +105,12 @@ public:
 			for (unsigned int i = 0; i < d_size - 1; i++) {
 				temp[i + 1] = a[i];
 			}
-			delete a;
+			delete[] a;
 			a = new T[d_size];
 			for (unsigned int i = 0; i < d_size; i++) {
 				a[i] = temp[i];
 			}
-			delete temp;
+			delete[] temp;
 		}
 	}
 
@@ -126,12 +126,12 @@ public:
 			for (unsigned int i = 0; i < d_size - 1; i++) {
 				temp[i] = a[i];
 			}
-			delete a;
+			delete[] a;
 			a = new T[d_size];
 			for (unsigned int i = 0; i < d_size; i++) {
 				a[i] = temp[i];
 			}
-			delete temp;
+			delete[] temp;
 			a[d_size - 1] = val;
 		}
 	}
@@ -146,12 +146,12 @@ public:
 			for (unsigned int i = 0; i < d_size; i++) {
 				temp[i] = a[i + 1];
 			}
-			delete a;
+			delete[] a;
 			a = new T[d_size];
 			for (unsigned int i = 0; i < d_size; i++) {
 				a[i] = temp[i];
 			}
-			delete temp;
+			delete[] temp;
 		}
 	}
 
@@ -165,12 +165,12 @@ public:
 			for (int i = d_size - 1; i >= 0; i--) {
 				temp[i] = a[i];
 			}
-			delete a;
+			delete[] a;
 			a = new T[d_size];
 			for (unsigned int i = 0; i < d_size; i++) {
 				a[i] = temp[i];
 			}
-			delete temp;
+			delete[] temp;
 		}
 	}
 
